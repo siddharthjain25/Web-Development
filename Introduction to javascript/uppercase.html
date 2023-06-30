@@ -1,0 +1,11 @@
+<script>
+    //var name = "john cena";
+    //alert(name.toUpperCase());
+    var name = prompt("Enter your name");
+    var first_letter = name.slice(0,1);
+    var final_first_letter = first_letter.toUpperCase();
+    var rest_name = name.slice(1,name.lenght);
+    var final_rest_name = rest_name.toLowerCase();
+    var final_name = final_first_letter + final_rest_name;
+    alert("Your name is " + final_name);
+</script>
