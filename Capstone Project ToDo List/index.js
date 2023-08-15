@@ -3,26 +3,55 @@ import bodyParser from "body-parser";
 
 const app = express();
 const port = 3000;
-const WeekDays = ["Sunday", "Monday", "Tuesday", "Wednesday", "Thursday", "Firday", "Saturday"];
-const MonthNames = ["January","February","March","April","May","June","July","August","September","October","November","December"];
-var Today = new Date();
-let Day = WeekDays[Today.getDay()];
-let Month = MonthNames[Today.getMonth()];
-let Tarik = Today.getDate(); 
-let Year = Today.getFullYear();
 
 app.use(express.static("public"));
 app.use(bodyParser.urlencoded({ extended: true }));
+app.set("view engine", "ejs");
+
+const todoLists = {
+  work: [{ id: 1, task: "Work" }],
+  daily: [{ id: 1, task: "Daily" }],
+};
+
+function addTodo(listName, task) {
+  const newList = todoLists[listName];
+  const newTodo = { id: newList.length + 1, task };
+  newList.push(newTodo);
+}
+
+function deleteTodo(listName, todoId) {
+  const list = todoLists[listName];
+  todoLists[listName] = list.filter((todo) => todo.id !== todoId);
+}
 
 app.get("/", (req, res) => {
-    res.render("index.ejs", {
-        Day: Day,
-        Month: Month,
-        Tarik: Tarik,
-        Year: Year, 
-    });
+  res.render("index.ejs", { todoList: todoLists.work });
+});
+
+app.post("/addWork", (req, res) => {
+  addTodo("work", req.body.taskWork);
+  res.redirect("/");
+});
+
+app.delete("/deleteWork/:id", (req, res) => {
+  deleteTodo("work", parseInt(req.params.id));
+  res.sendStatus(204);
+});
+
+app.get("/daily", (req, res) => {
+  res.render("daily.ejs", { todoList: todoLists.daily });
+});
+
+app.post("/addDaily", (req, res) => {
+  addTodo("daily", req.body.taskDaily);
+  res.redirect("/daily");
+});
+
+app.delete("/deleteDaily/:id", (req, res) => {
+  deleteTodo("daily", parseInt(req.params.id));
+  res.sendStatus(204);
 });
 
 app.listen(port, () => {
-    console.log(`Server is running at port ${port}`);
+  console.log(`Listening on port ${port}`);
 });
