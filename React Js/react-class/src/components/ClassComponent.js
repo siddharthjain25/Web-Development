@@ -16,7 +16,7 @@ class ClassComponent extends React.Component {
   render() {
     return (
       <div>
-        <h1>{this.state.count}</h1>
+      <h1>{this.state.count}</h1>
         <button onClick={this.increase}>+</button>
       </div>
     );
